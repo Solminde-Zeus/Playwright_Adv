@@ -7,7 +7,6 @@ type NetworkMockingFixtures = {
   delayedBooksPage: NetworkMockingPage;
 };
 export const test = base.extend<NetworkMockingFixtures>({
-  // TC_NM_001 — Intercepts API and returns two mocked books
   mockedBooksPage: async ({ page }, use) => {
     await page.route(NetworkMockingData.booksApiUrl, (route) => {
       route.fulfill({
@@ -20,7 +19,6 @@ export const test = base.extend<NetworkMockingFixtures>({
     await networkMockingPage.goto();
     await use(networkMockingPage);
   },
-  // TC_NM_002 — Intercepts API and returns empty books array
   emptyBooksPage: async ({ page }, use) => {
     await page.route(NetworkMockingData.booksApiUrl, (route) => {
       route.fulfill({
@@ -33,7 +31,6 @@ export const test = base.extend<NetworkMockingFixtures>({
     await networkMockingPage.goto();
     await use(networkMockingPage);
   },
-  // TC_NM_003 — Intercepts API, waits 3 seconds, then returns delayed books
   delayedBooksPage: async ({ page }, use) => {
     await page.route(NetworkMockingData.booksApiUrl, async (route) => {
       await new Promise((resolve) =>
@@ -46,9 +43,6 @@ export const test = base.extend<NetworkMockingFixtures>({
       });
     });
     const networkMockingPage = new NetworkMockingPage(page);
-    // Navigate but do NOT wait for networkidle here —
-    // we hand control to the test while the API is still pending
-    // so the spec can assert the loading/empty state before resolution.
     await page.goto(NetworkMockingData.url);
     await use(networkMockingPage);
   },

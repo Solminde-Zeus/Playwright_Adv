@@ -12,7 +12,6 @@ export class BrowserWindowsPage {
   async goto(): Promise<void> {
     await this.page.goto(BrowserWindowsData.url);
   }
-  // TC_001 — Opens new tab and stores reference as class property
   async openNewTabAndVerifyItExists(): Promise<void> {
     const newTabPromise = this.context.waitForEvent("page");
     await this.newTabBtn().click();
@@ -20,7 +19,6 @@ export class BrowserWindowsPage {
     await this.childTab.waitForLoadState("domcontentloaded");
     expect(this.context.pages().length).toBe(2);
   }
-  // TC_002 — Verifies heading and URL of the stored child tab
   async verifyNewTabContent(): Promise<void> {
     await expect(this.childTab!.locator("h1")).toHaveText(
       BrowserWindowsData.newTabExpectedText,
@@ -29,14 +27,12 @@ export class BrowserWindowsPage {
       BrowserWindowsData.newTabExpectedUrl,
     );
   }
-  // TC_003 — Closes stored child tab and returns focus to parent
   async closeChildTabAndReturnToParent(): Promise<void> {
     await this.childTab!.close();
     await this.page.bringToFront();
     expect(this.context.pages().length).toBe(1);
     expect(this.page.url()).toContain("browser-windows");
   }
-  // TC_004 — Opens message window and verifies its content
   async verifyNewWindowMessageContent(): Promise<void> {
     const popupPromise = this.context.waitForEvent("page");
     await this.newWindowMsgBtn().click();
